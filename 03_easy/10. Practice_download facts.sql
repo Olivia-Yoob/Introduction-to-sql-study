@@ -1,0 +1,47 @@
+/* ============================================================
+   📝 PROBLEM 1: [Download facts]
+   Source: Interview Query — [Easy]
+   Date: 2026-06-07
+   ============================================================ */
+
+-- accounts, downloads, find the average number of downloads for free vs paying accounts, broken down by day
+-- need to consider accounts that have had at least one download
+-- round average_downloads to 2 decimal places
+
+/* 🧪 MY ATTEMPT (정답 보기 전 시도) */
+
+SELECT downloads.download_date, accounts.paying_customer, ROUND(AVG(downloads),2) AS average_downloads
+FROM accounts
+INNER JOIN downloads 
+    ON accounts.account_id = downloads.account_id
+GROUP BY accounts.paying_customer
+
+/* ✅ SOLUTION */
+
+SELECT downloads.download_date, accounts.paying_customer, ROUND(AVG(downloads.downloads),2) AS average_downloads
+FROM accounts
+INNER JOIN downloads 
+    ON accounts.account_id = downloads.account_id
+GROUP BY accounts.paying_customer, downloads.download_date 
+
+-- downloads.download_date : broken by day
+-- accounts.paying_customer : free vs paying accounts
+-- INNER JOIN : consider accounts that have had at least one download
+
+/* 💭 REFLECTION
+
+1. 문제에서 "broken down by X"가 나오면
+   X를 GROUP BY에 포함해야 한다.
+
+2. SELECT에 있는 비집계 컬럼은 보통 GROUP BY에도 들어가야 한다.
+
+3. 집계하기 전에 테이블 구조를 먼저 확인하자.
+   이번 문제는 downloads 컬럼이 이미 존재했기 때문에
+   COUNT()가 아니라 AVG(downloads)를 사용했다.
+
+4. INNER JOIN을 사용하면 downloads 기록이 없는 계정은
+   자동으로 제외되므로,
+   "accounts that have had at least one download" 조건이
+   자연스럽게 충족된다.
+
+*/
