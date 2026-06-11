@@ -7,3 +7,6 @@
 * satisfies the two conditions
 
 * if any : 있다면, 있는 경우에 한해서, 만약 있다면
+* Focus on the task at hand. : 지금 다루고 있는 ~ / 곁에
+* nifty : 멋진
+* CoderPad, which is the de-facto interviewing tool for engineers and most tech companies : 사실상 표준
