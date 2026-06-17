@@ -42,3 +42,14 @@ ON e.id = m.max_id
 --> GROUP BY person -> MAX(id) or MAX(created_at) -> JOIN back
 
 /* 🎓 Practice Question */
+-- For each employee, return their current (most recent) salary based on updated_at
+
+SELECT s.employee_id, s.salary, s.updated_at
+FROM employee_salaries AS s 
+INNER JOIN (
+    SELECT employee_id, MAX(updated_at) AS max_date
+    FROM employee_salaries
+    GROUP BY employee_id
+) as i
+ON s.employee_id = i.employee_id
+AND s.updated_at = i.max_date
