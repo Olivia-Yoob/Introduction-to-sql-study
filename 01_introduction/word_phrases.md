@@ -13,3 +13,4 @@
 * customer churn : 고객 이탈
 * Better yet, : 그 보다 더 나은 것은
 * CROSS JOIN allow us to iterate over two tables directly with SQL
+* moseying : to walk or move in a slow, relaxed, and often aimless manner
