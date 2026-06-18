@@ -17,8 +17,49 @@ CASE
 
 
 /* ✅ SOLUTION */
+/* 
+STEP 1. WHAT & HOW : Retrieve customer name
+=> user.name must be the result,so need to JOIN with transactions table
 
+STEP 2. JOIN KEY? 
+=> transactions.user_id = users.id
+
+STEP 3. more then three transactions 
+=> aggregate function
+=> GROUP BY customers + COUNT / SUM
+
+STEP 4. "both 2019 and 2020"
+=> 두 해를 합치는게 아니라, 각 해를 따로 세서 둘 다 3이 초과하는지
+=> 조건부 집계를 통해 연도별 카운트를 분리해야 함
+SUM (CASE WHEN YEAR = 2019 THEN 1 ELSE 0 END)
+SUM (CASE WHEN YEAR = 2020 THEN 1 ELSE 0 END)
+
+STEP 5. 집계 결과로 거르기 
+=> WHERE X, HAVING O
+HAVING 2019 COUNT > 3 AND 2020 COUNT > 3
+
+*/
+
+SELECT u.name AS customer_name
+FROM transactions t JOIN users u 
+    ON t.user_id = u.id
+GROUP BY u.id, u.name
+HAVING SUM(CASE WHEN YEAR(t.created_at) = 2019 THEN 1 ELSE 0 END) > 3
+    AND SUM(CASE WHEN YEAR(t.created_at) = 2020 THEN 1 ELSE 0 END) > 3
 
 
 
 /* 📝 REFLECTION */
+
+/* 1) CTE 불필요: 마지막 SELECT 가 name 만 그대로 통과 → 한 방 쿼리로 충분.
+        CTE 는 결과를 '재가공'할 때 가치 있음.
+     2) GROUP BY 1 (id만) → name select 는 MySQL 한정 허용(PK 의존성).
+        이식성 위해 GROUP BY u.id, u.name 둘 다 명시.
+     3) HAVING 에서 alias(t_2019) 참조도 MySQL 한정.
+        표준 SQL 은 HAVING 에 SELECT alias 못 봄 → 표현식 재작성이 안전.
+     4) YEAR(...) = '2019' (문자열) → YEAR()는 숫자 반환이라 = 2019 가 깔끔.
+
+   💡 핵심 패턴: "그룹 내에서 조건별로 따로 세고 싶다"
+      → COUNT/SUM + CASE WHEN (= conditional aggregation)
+      → 행을 미리 WHERE 로 거르면 한 그룹밖에 못 셈. 그래서 집계 안에 조건을 넣음.
+   ------------------------------------------------------------ */
