@@ -94,3 +94,87 @@ WHERE (
 /* 상황쓰는 것한 행씩 거르기 (개별 값 비교) WHERE
 한 행씩 거르는데 전체 집계값과 비교 WHERE + subquery 
 ⭐그룹별 집계 후 그룹 거르기 GROUP BY + HAVING */
+
+
+/* 🧪 MY ATTEMPT #2 for review (0625) */ 
+-- Write a SQL query to list all flights scheduled between Mumbai and Delhi that use an aircraft whose capacity is greater than the average capacity of all aircrafts in the database.
+
+-- #1 Split chunk 
+-- list all flights
+SELECT 
+
+-- scheduled between Mumbai and Delhi 
+-- BOM -> DEL / DEL -> BOM
+
+-- that use an aircraft
+flights JOIN aircraft
+
+-- whose capacity is greater than 
+WHERE capacity > ** 
+
+-- the average capacity of all aircrafts
+AVG()
+all aircrafts -> subquery?
+
+
+-- #2 Summarize Question to one sentence
+🤜 뭄바이-델리 항공편 중 전체 평균 수용인원보다 큰 비행기를 사용하는 항공편 조회하기
+
+-- #3 SQL 
+1) Result coulmn should be 'origin', 'destination', 'departure_tiume', 'model', 'capacity'
+2) How many tables? -> flights JOIN aircrafts
+3) conditions -> WHERE BOM & DEL 
+4) aggregation -> average AVG()
+5) compare with the results of aggregation -> capacity > average
+
+-- #4 classify types
+JOIN / WHERE / AVG / subquery
+
+
+-- ⭐️ My attempts 
+SELECT flights.origin, flights.destination, DATE_FORMAT(flights.departure_time, '%Y-%m-%d %H:%i') AS departure_time, aircrafts.model, aircrafts.capacity
+FROM flights JOIN aircrafts
+ON flights.aircraft_id = aircrafts.aircraft_id
+WHERE (
+    (flights.origin = 'BOM' and flights.destination = 'DEL') 
+    OR (flights.origin = 'DEL' and flights.destination = 'BOM') 
+)
+-- 추가
+AND aircrafts.capacity >
+(
+    SELECT AVG(capacity)
+    FROM aircrafts
+)
+
+-- What I missed 
+*) compare with the results of aggregation -> capacity > average
+
+-> AVG is aggregation function !
+-> calculate average first, and compare that average with each rows.
+
+SELECT AVG(capacity)
+FROM aircrafts
+
+*) datetime results
+
+DATE_FORMAT(flights.departure_time, '%Y-%m-%d %H:%i') AS departure_time
+
+-- ⭐️ My attempts 2
+-- capacity > AVG(capacity), so need to calculate AVG first. -> make average first by using CTE 
+-- To compare average and each rows, use CROSS JOIN
+
+WITH avg_capacity AS
+(
+    SELECT AVG(capacity) AS avg_cap
+    FROM aircrafts
+)
+SELECT flights.origin, flights.destination, DATE_FORMAT(flights.departure_time, '%Y-%m-%d %H:%i') AS departure_time, aircrafts.model, aircrafts.capacity
+FROM flights JOIN aircrafts
+ON flights.aircraft_id = aircrafts.aircraft_id
+CROSS JOIN avg_capacity
+WHERE (
+    (flights.origin = 'BOM' and flights.destination = 'DEL') 
+    OR (flights.origin = 'DEL' and flights.destination = 'BOM') 
+)
+AND aircrafts.capacity > avg_capacity.avg_cap
+

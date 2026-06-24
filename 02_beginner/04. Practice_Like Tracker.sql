@@ -59,3 +59,14 @@ WHERE created_at LIKE '2020-06-06%'
 -- First, range comparison can use indexes on datetime columns, while LIKE typically triggers a full table scan. 
 -- Second, it avoids implicit type conversion between datetime and string. 
 -- Third, the intent is more explicit — anyone reading the query immediately knows it's a date range.
+
+
+/* 🧪 MY ATTEMPT #2 for review (0625) */
+-- how many differernt users / gave a like / on June 6,2020
+-- nums_users_gave_like
+
+SELECT COUNT(DISTINCT user_id) AS num_users_gave_like
+FROM events
+WHERE action = 'like' 
+    AND created_at < '2020-06-07'
+    AND created_at >= '2020-06-06'
