@@ -32,3 +32,19 @@ WHERE action = 'email_opened'
     4) How many opens
 → COUNT(*) 또는 COUNT(column)
 -- 사람 수를 세면 DISTINCT , 이벤트 수를 새면 그냥 수 세기
+
+/* 🧪 MY ATTEMPT #2 for review (0626) */
+1) one row
+2) one table with no JOIN
+3) opened an email 
+WHERE action 'email_opened'
+4) no conditions
+5) count
+COUNT(DISTINCT(user_id))
+6) no filter on the aggregation
+7) no comparison
+8) num_users_open_email
+
+SELECT COUNT(DISTINCT(user_id)) AS num_users_open_email
+FROM events
+WHERE action 'email_opened'

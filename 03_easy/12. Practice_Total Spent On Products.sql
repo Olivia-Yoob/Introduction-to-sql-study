@@ -28,3 +28,37 @@ GROUP By p.item
 -- select the function that fits with column type
 WHERE registration_date >= '2022-01-01'
     AND registration_date < '2023-01-01'
+
+
+/* 🧪 MY ATTEMPT #2 for review (0626) */
+1) one row by each item
+2) users, purchases
+FROM users JOIN purchases
+    ON users.user_id = purchases.user_id
+
+3) users that registered in 2022
+WHERE users.registration_date < '2023-01-01 00:00:00'
+    AND users.registration_date >= '2022-01-01 00:00:00'
+
+4) each item 
+GROUP BY purchases.item
+
+5) total amount spent
+SUM(purchases.price)
+
+6) Not needed
+
+7) Not needed
+
+8) 
+SELECT purchases.item, SUM(purchases.price) AS total_amount_spent
+
+
+SELECT purchases.item, SUM(purchases.price) AS total_amount_spent
+FROM users JOIN purchases
+    ON users.user_id = purchases.user_id
+WHERE users.registration_date < '2023-01-01 00:00:00'
+    AND users.registration_date >= '2022-01-01 00:00:00'
+GROUP BY purchases.item
+
+

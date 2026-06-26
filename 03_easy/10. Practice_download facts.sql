@@ -45,3 +45,34 @@ GROUP BY accounts.paying_customer, downloads.download_date
    자연스럽게 충족된다.
 
 */
+
+/* 🧪 MY ATTEMPT #2 for review (0626) */
+1) many rows
+2) accounts, downloads 2tables & consider accounts that have had at least one Download 
+accounts JOIN downloads
+   ON accounts.account_id = downloads.account_id
+
+3) round average_downloads to 2 decimal places
+ROUND(average_downloads,2)
+
+4) broken down by day & downloads for free vs paying account
+GROUP BY downloads.download_date, accounts.paying_customer
+
+5) average number of downloads
+AVG(downloads.downloads) AS average_downloads
+
+6) X filter needed
+
+7) X compare needed
+
+8) 
+SELECT download_date, paying_customer, ROUND(AVG(downloads.downloads),2) AS average_downloads
+
+9) No sort needed
+
+
+SELECT download_date, paying_customer, ROUND(AVG(downloads.downloads),2) AS average_downloads
+FROM accounts 
+JOIN downloads
+   ON accounts.account_id = downloads.account_id
+GROUP BY downloads.download_date, accounts.paying_customer
