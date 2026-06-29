@@ -45,3 +45,61 @@ GROUP BY student_name
 -- Since each exam was taken only once, SUM and MAX give the same result, but MAX better reflects the intent ("pick the one score"). I'd use MAX
 -- if a student could retake an exam, since SUM would wrongly add them up.
 -- Note: IF() is shorter but MySQL-only; CASE is standard SQL and portable.
+
+
+/* 🧪 MY ATTEMPT #2 for review (0630) */
+
+SELECT 
+    student_name, 
+    MAX(CASE WHEN exam_id = 1 THEN score END) AS exam_1,
+    MAX(CASE WHEN exam_id = 2 THEN score END) AS exam_2,
+    MAX(CASE WHEN exam_id = 3 THEN score END) AS exam_3,
+    MAX(CASE WHEN exam_id = 4 THEN score END) AS exam_4
+FROM exam_scores
+GROUP BY student_name -- 행을 안 접으니까 원본 그대로 등장
+
+⭐️ GROUP BY 하면, SELECT에는 (A) 묶은 컬럼 + (B) 집계값만 온다.
+
+
+/* ============================================================
+   🎓 EXTRA PRACTICE (0630) — CASE / pivot / conditional aggregation
+   ============================================================ */
+
+/* ---------- Q1. Pivot (방금 배운 패턴) ----------
+   Table: sales (id, salesperson, quarter ['Q1'..'Q4'], amount)
+
+   For each salesperson, show total sales in separate columns per quarter.
+
+   Expected shape:
+   | salesperson | Q1 | Q2 | Q3 | Q4 |
+
+   👉 your answer:
+*/
+
+SELECT salesperson,
+    SUM(CASE WHEN quarter = 'Q1' THEN amount END) AS Q1,
+    SUM(CASE WHEN quarter = 'Q2' THEN amount END) AS Q2,
+    SUM(CASE WHEN quarter = 'Q3' THEN amount END) AS Q3,
+    SUM(CASE WHEN quarter = 'Q4' THEN amount END) AS Q4
+FROM sales
+GROUP BY salesperson
+
+
+
+/* ---------- Q2. Conditional aggregation (살짝 변형) ----------
+   Table: orders (id, customer_id, status ['shipped' / 'cancelled'])
+
+   For each customer, count how many orders were shipped and how many
+   were cancelled — in two separate columns.
+
+   Expected shape:
+   | customer_id | shipped_count | cancelled_count |
+
+   👉 your answer:
+*/
+
+SELECT customer_id, 
+    COUNT(CASE WHEN status = 'shipped' THEN 1 END) AS shipped_count,
+    COUNT(CASE WHEN status = 'cancelled' THEN 1 END) AS cancelled_count
+FROM orders
+GROUP BY customer_id

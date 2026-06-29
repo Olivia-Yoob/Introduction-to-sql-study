@@ -153,3 +153,12 @@ HAVING SUM(amount) > 100000
 HAVING COUNT(End_dt) = 0
 
 
+-- Practice Question 
+Q1. Table: orders (id, customer_id, amount, status)
+Find all customers whose total order amount is greater than 5000.
+-- HAVING , because we have to compare total order amount (SUM) of each customer with 5000
+
+
+Q2. Table: orders (id, customer_id, amount, status)
+Find all orders that were placed by customer 'VIP' and have status = 'shipped'.
+-- WHERE, because we have to filter rows with those conditions.
