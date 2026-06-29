@@ -84,4 +84,72 @@ WITH slack_salaries AS (
 SELECT SUM(salary) AS total_slack_salary
 FROM slack_salaries
 
-/* 🎓 Practice Question */
+
+
+/* 🧪 MY ATTEMPT #2 for review (0630) */
+
+0) 
+-- didn't complete any of their projects
+-> none completed 
+
+-- assigned at least one project
+-> remove employee who has 0 project
+
+1) sum of salaries, 1 row
+
+2) salary(employees) + End_dt(projects)
+FROM employees e INNER JOIN projects p
+    ON e.id = p.employee_id
+
+3) 
+-- ❌ WHERE p.End_dt IS NULL
+-- 초반에 널이 아닌 값을 다 지워버리게 되면 나중에 완료한 적이 있다는 증거가 없어서 이 사람이 적어도 완료한 적이 있는지 판단이 어려움
+-- 전체가 0인 사람을 찾아야 하는데, 하나라도 했던 사람까지 포함이 되니까 
+
+
+4) 
+GROUP BY e.id
+
+5)
+1. COUNT(End_dt)
+2. SUM(salary)
+
+6) at least, more than, none
+HAVING COUNT(p.End_dt) = 0 
+-- 행을 안 지우고, 직원별로 모아서 확인해서 판단
+-- 프로젝트가 대상이면 WHERE 맞음
+
+7) 다시 SUM 해야 하니 CTE
+WITH slack_salaries AS ()
+
+8) 
+SELECT SUM(salary) AS total_slack_salary
+
+9) 
+None
+
+
+
+WITH slack_salaries AS (
+SELECT e.id, p.End_dt
+FROM employees e INNER JOIN projects p
+    ON e.id = p.employee_id
+GROUP BY e.id
+HAVING COUNT(p.End_dt) = 0
+)
+
+SELECT SUM(salary) AS total_slack_salary
+FROM slack_salaries
+
+--HAVING
+
+1) 개수 조건
+HAVING COUNT(*) >= 3
+
+2) 합계 조건
+HAVING SUM(amount) > 100000
+
+3) 전부/하나도 조건 
+HAVING COUNT(End_dt) = 0
+
+

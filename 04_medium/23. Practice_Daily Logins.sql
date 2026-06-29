@@ -61,3 +61,64 @@ FROM
     )
 GROUP BY number_of_orders -- 2) group by counts of orders 
 
+
+
+
+
+
+/* 🧪 MY ATTEMPT #1 for review (0629) */
+1) number_of_logins ~ number_of_users (many rows)
+
+2) one table 
+FROM user_logins
+
+3)on Jan 1st, 2022
+WHERE login_date < '2022.01.02 00:00:00'
+    AND login_date >= '2022.01.01 00:00:00'
+
+4) 
+GROUP BY user_id
+
+5) 
+
+
+6) 
+HAVING COUNT(id)
+
+7) 
+
+8)
+
+FROM user_logins
+WHERE login_date < '2022.01.02 00:00:00'
+    AND login_date >= '2022.01.01 00:00:00'
+GROUP BY user_id
+HAVING COUNT(id)
+
+-- 집계한 결과를 다시 집계!
+
+1) user 별 로그인 횟수 
+SELECT user_id, COUNT(*) AS number_of_logins
+FROM user_logins
+WHERE login_date < '2022.01.02 00:00:00'
+    AND login_date >= '2022.01.01 00:00:00'
+GROUP BY user_id
+
+2) 로그인 횟수 별 user 수
+
+SELECT number_of_logins, COUNT(user_id) AS number_of_users
+FROM ( 
+    SELECT user_id, COUNT(*) AS number_of_logins
+    FROM user_logins    
+    WHERE login_date < '2022.01.02 00:00:00'
+    AND login_date >= '2022.01.01 00:00:00'
+    GROUP BY user_id
+)
+GROUP BY number_of_logins
+
+-- ⭐️ KEY TAKEAWAYS (aggregation-of-aggregation pattern)
+-- 1) Aggregating an aggregate = use a SUBQUERY
+--    Trigger: "Am I counting something that was ALREADY counted once?"
+-- 2) Thinking order: picture the FINAL table -> decide GROUP BY -> then write SELECT
+-- 3) SELECT holds only two things: (a) the GROUP BY column + (b) the aggregate value
+-- 4) COUNT(*) = number of ROWS inside each group (not "counting the column")
