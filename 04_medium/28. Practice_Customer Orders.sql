@@ -47,3 +47,11 @@ GROUP BY u.id, u.name
 HAVING SUM(CASE WHEN YEAR(t.created_at) = 2019 THEN 1 ELSE 0 END) > 3
     AND SUM(CASE WHEN YEAR(t.created_at) = 2020 THEN 1 ELSE 0 END) > 3
 
+/* 🧪 MY ATTEMPT #2 for review (0701) */
+
+SELECT u.name AS customer_name
+FROM transactions t JOIN users u
+    ON t.user_id = u.id
+GROUP BY u.id, u.name
+HAVING SUM (CASE WHEN YEAR(t.created_at) = 2019 THEN 1 ELSE 0 END) > 3,
+    AND SUM (CASE WHEN YEAR(t.created_at) = 2020 THEN 1 ELSE 0 END) > 3
